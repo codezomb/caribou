@@ -1,0 +1,19 @@
+---
+version: '3.8'
+
+volumes:
+  app-storage:
+
+services:
+  app:
+    image: caribou-app
+    command: app
+    depends_on:
+      - postgres
+
+  # Misc Services
+
+  postgres:
+    image: public.ecr.aws/docker/library/postgres:14
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust

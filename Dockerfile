@@ -16,7 +16,9 @@ USER alpine
 
 ARG BUNDLE_WITHOUT=development:test
 ARG RAILS_ENV=production
+ARG RAILS_MASTER_KEY
 
+ENV RAILS_MASTER_KEY=${RAILS_MASTER_KEY}
 ENV BUNDLE_WITHOUT ${BUNDLE_WITHOUT}
 ENV RAILS_ENV ${RAILS_ENV}
 ENV NODE_ENV ${RAILS_ENV}
@@ -27,5 +29,6 @@ RUN bundle install
 COPY --chown=alpine:alpine . ./
 RUN npm install
 RUN rails assets:precompile
+RUN rm -rf node_modules
 
 ENTRYPOINT ["/work/bin/entrypoint"]

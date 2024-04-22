@@ -1,4 +1,4 @@
-/public/vite*
+/public/vite-*
 node_modules
 coverage
 cache

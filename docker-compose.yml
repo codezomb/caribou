@@ -1,9 +1,6 @@
 ---
 version: '3.8'
 
-volumes:
-  storage:
-
 services:
   app:
     image: caribou-app
@@ -13,23 +10,12 @@ services:
         BUNDLE_WITHOUT: '' # keep empty
         RAILS_ENV: development
     command: app
-    volumes:
-      - storage:/mnt/storage
-      - ./:/work
     depends_on:
       - postgres
-
-  web:
-    image: caribou-app
-    command: web
-    user: root
     volumes:
-      - storage:/mnt/storage
       - ./:/work
-    depends_on:
-      - app
     ports:
-      - 80:80
+      - 3000:3000
 
   # Misc Services
 

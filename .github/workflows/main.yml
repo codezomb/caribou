@@ -1,0 +1,73 @@
+on:
+  push: {}
+
+jobs:
+  build-docker:
+    name: Build Docker Image
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v5
+        with:
+          outputs:    type=docker,dest=/tmp/caribou-app.tar
+          cache-from: type=gha
+          cache-to:   type=gha,mode=max
+          tags:       caribou-app
+          build-args: |
+            RAILS_MASTER_KEY=${{ secrets.RAILS_MASTER_KEY }}
+            BUNDLE_WITHOUT=''
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          path: /tmp/caribou-app.tar
+          name: caribou-app
+
+  bundle-audit:
+    name: Bundle Audit
+    runs-on: ubuntu-20.04
+    needs: build-docker
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
+        with:
+          name: caribou-app
+          path: /tmp
+      - run: |
+          docker load --input /tmp/caribou-app.tar
+          docker run --rm caribou-app bundle-audit
+
+  brakeman:
+    name: Brakeman
+    runs-on: ubuntu-20.04
+    needs: build-docker
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
+        with:
+          name: caribou-app
+          path: /tmp
+      - run: |
+          docker load --input /tmp/caribou-app.tar
+          docker run --rm caribou-app brakeman
+
+  rspec:
+    name: RSpec
+    runs-on: ubuntu-20.04
+    needs:
+      - build-docker
+      - bundle-audit
+      - brakeman
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
+        with:
+          name: caribou-app
+          path: /tmp
+      - run: |
+          docker compose -f .github/compose.yml pull postgres
+      - run: |
+          docker load --input /tmp/caribou-app.tar
+          docker compose -f .github/compose.yml run --quiet-pull --rm \
+            -e RAILS_ENV=test app spec

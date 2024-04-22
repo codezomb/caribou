@@ -1,0 +1,49 @@
+---
+openapi: 3.0.1
+info:
+  title: API V1
+  version: v1
+paths:
+  "/api/vehicles/{id}":
+    get:
+      summary: get vehicle details by id
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              example:
+                year: 2021
+                make: Toyota
+                model: Camry
+                msrp: 7615065
+                valuation: 7315065
+              schema:
+                "$ref": schemas/vehicles.json#/definitions/show_body
+    put:
+      summary: update vehicle msrp
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: no_content
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": schemas/vehicles.json#/definitions/put_body
+servers:
+- url: http://{defaultHost}
+  variables:
+    defaultHost:
+      default: localhost:3000

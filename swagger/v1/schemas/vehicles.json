@@ -1,0 +1,47 @@
+{
+  "definitions" : {
+    "put_body": {
+      "additionalProperties" : false,
+      "type"                 : "object",
+
+      "properties": {
+        "vehicle": {
+          "type" : "object",
+
+          "properties": {
+            "msrp" : {
+              "description" : "The MSRP value for the vehicle in cents",
+              "example"     : 10245600,
+              "type"        : "Integer"
+            }
+          },
+
+          "required": [
+            "msrp"
+          ]
+        }
+      }
+    },
+
+    "show_body": {
+      "additionalProperties" : false,
+      "type"                 : "object",
+
+      "properties" : {
+        "make"      : { "type" : ["string"] },
+        "model"     : { "type" : ["string"] },
+        "year"      : { "type" : ["integer"] },
+        "valuation" : { "type" : ["integer"] },
+        "msrp"      : { "type" : ["integer"] }
+      },
+
+      "required" : [
+        "make",
+        "model",
+        "year",
+        "valuation",
+        "msrp"
+      ]
+    }
+  }
+}
