@@ -1,0 +1,14 @@
+/public/vite*
+node_modules
+coverage
+cache
+log
+tmp
+
+credentials.yml*
+master.key
+.DS_Store
+*.local
+*.swp
+.env
+._*

@@ -1,0 +1,28 @@
+inherit_gem:
+  wup_rubocop:
+    - default.yml
+
+Rails/SkipsModelValidations:
+  Enabled: false
+
+Style/AsciiComments:
+  Enabled: false
+
+AllCops:
+  NewCops: disable
+
+RSpec/MultipleExpectations:
+  Enabled: true
+  Exclude:
+    - spec/controllers/**/*
+
+RSpec/AnyInstance:
+  Enabled: false
+
+RSpec/EmptyExampleGroup:
+  Exclude:
+    - 'spec/requests/**/*'
+
+RSpec/ScatteredSetup:
+  Exclude:
+    - 'spec/requests/**/*'

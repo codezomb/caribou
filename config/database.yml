@@ -1,0 +1,24 @@
+environment: &default
+  adapter:  postgresql
+  encoding: unicode
+  database: caribou_<%= ENV.fetch('RAILS_ENV', 'development') %>
+  username: <%= ENV.fetch('RDS_USERNAME', 'postgres') %>
+  password: <%= ENV.fetch('RDS_PASSWORD', '') %>
+  pool: <%= ENV.fetch('RDS_POOL_SIZE', 5) %>
+  host: <%= ENV.fetch('RDS_HOSTNAME', 'postgres') %>
+  port: <%= ENV.fetch('RDS_PORT', 5432) %>
+
+development:
+  <<: *default
+
+production:
+  <<: *default
+
+sandbox:
+  <<: *default
+
+staging:
+  <<: *default
+
+test:
+  <<: *default

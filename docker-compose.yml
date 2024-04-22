@@ -1,0 +1,49 @@
+---
+version: '3.8'
+
+volumes:
+  storage:
+
+services:
+  app:
+    image: caribou-app
+    build:
+      context: ./
+      args:
+        BUNDLE_WITHOUT: '' # keep empty
+        RAILS_ENV: development
+    command: app
+    volumes:
+      - storage:/mnt/storage
+      - ./:/work
+    depends_on:
+      - postgres
+
+  web:
+    image: caribou-app
+    command: web
+    user: root
+    volumes:
+      - storage:/mnt/storage
+      - ./:/work
+    depends_on:
+      - app
+    ports:
+      - 80:80
+
+  # Misc Services
+
+  postgres:
+    image: public.ecr.aws/docker/library/postgres:14
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+
+  vite:
+    image: caribou-app
+    command: ./bin/vite dev
+    volumes:
+      - source: ./
+        target: /work
+        type: bind
+    ports:
+      - 3036:3036
